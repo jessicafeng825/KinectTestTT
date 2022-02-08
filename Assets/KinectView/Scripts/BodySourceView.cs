@@ -15,7 +15,7 @@ public class BodySourceView : MonoBehaviour
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     private BodySourceManager _BodyManager;
 
-    Transform LeftHand, RightHand, LeftShoulder, RightShoulder ;
+    Transform LeftHand, RightHand, LeftShoulder, RightShoulder, ElbowLeft, ElbowRight, SpineMid;
     
     private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
     {
@@ -48,7 +48,22 @@ public class BodySourceView : MonoBehaviour
         { Kinect.JointType.SpineShoulder, Kinect.JointType.Neck },
         { Kinect.JointType.Neck, Kinect.JointType.Head },
     };
+    private List<Kinect.JointType> _joints = new List<Kinect.JointType>
+    {
+        Kinect.JointType.Head,
+        Kinect.JointType.ShoulderLeft,
+        Kinect.JointType.ElbowLeft,
+        Kinect.JointType.WristLeft,
+        Kinect.JointType.HandLeft,
 
+        Kinect.JointType.SpineMid,
+        Kinect.JointType.SpineShoulder,
+
+        Kinect.JointType.ShoulderRight,
+        Kinect.JointType.ElbowRight,
+        Kinect.JointType.WristRight,
+        Kinect.JointType.HandRight,
+    };
     void Update () 
     {
         if (BodySourceManager == null)
@@ -125,8 +140,12 @@ public class BodySourceView : MonoBehaviour
         GameObject body = new GameObject("Body:" + id);
 
         //for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
-        for (Kinect.JointType jt = Kinect.JointType.Head; jt <= Kinect.JointType.HandRight; jt++)
+        //for (Kinect.JointType jt = Kinect.JointType.Head; jt <= Kinect.JointType.HandRight; jt++)
+        foreach (Kinect.JointType jt in _joints)
         {
+            //not render part
+            
+
             //GameObject jointObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             GameObject jointObj = Instantiate(mJointObject);
 
@@ -148,7 +167,8 @@ public class BodySourceView : MonoBehaviour
     private void RefreshBodyObject(Kinect.Body body, GameObject bodyObject)
     {
         //for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
-        for (Kinect.JointType jt = Kinect.JointType.Head; jt <= Kinect.JointType.HandRight; jt++)
+        //for (Kinect.JointType jt = Kinect.JointType.Head; jt <= Kinect.JointType.HandRight; jt++)
+        foreach (Kinect.JointType jt in _joints)
         {
             Kinect.Joint sourceJoint = body.Joints[jt];
             Kinect.Joint? targetJoint = null;
@@ -177,6 +197,15 @@ public class BodySourceView : MonoBehaviour
                 case Kinect.JointType.HandRight:
                     RightHand = jointObj;
                     break;
+                case Kinect.JointType.ElbowLeft:
+                    ElbowLeft = jointObj;
+                    break;
+                case Kinect.JointType.ElbowRight:
+                    ElbowRight = jointObj;
+                    break;
+                case Kinect.JointType.SpineMid:
+                    SpineMid = jointObj;
+                    break;
             }
 
             LineRenderer lr = jointObj.GetComponent<LineRenderer>();
@@ -195,7 +224,8 @@ public class BodySourceView : MonoBehaviour
 
     private void checkifhaveanyAction()
     {
-        if(LeftHand.localPosition.y > LeftShoulder.localPosition.y && RightHand.localPosition.y > RightShoulder.localPosition.y)
+        //if (LeftHand.localPosition.y > LeftShoulder.localPosition.y && RightHand.localPosition.y > RightShoulder.localPosition.y)
+        if(LeftHand.localPosition.y > LeftShoulder.localPosition.y && RightHand.localPosition.y > RightShoulder.localPosition.y && ElbowLeft.localPosition.y > SpineMid.localPosition.y && ElbowRight.localPosition.y > SpineMid.localPosition.y)
         {
             Debug.Log("PosAnimatedHand");
             AnimatedHands.GetComponent<AnimationController>().isTouched = true;
