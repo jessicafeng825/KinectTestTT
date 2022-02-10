@@ -11,10 +11,11 @@ public class BodySourceView : MonoBehaviour
     public GameObject mJointObject;
     public GameObject AnimatedHands;
 
-    public int count = 1;
+    public bool istrackedone = true;
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
+    public ulong bodytrackingIDfornow;
     private BodySourceManager _BodyManager;
-    private bool istrackedone = true;
+
     Transform LeftHand, RightHand, LeftShoulder, RightShoulder, ElbowLeft, ElbowRight, SpineMid;
     
     private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
@@ -111,8 +112,7 @@ public class BodySourceView : MonoBehaviour
             {
                 Destroy(_Bodies[trackingId]);
                 _Bodies.Remove(trackingId);
-                count++;
-                
+                istrackedone = true;
             }
         }
 
@@ -128,16 +128,19 @@ public class BodySourceView : MonoBehaviour
             }
             if(body.IsTracked)
             {
-                if(!_Bodies.ContainsKey(body.TrackingId))
+                if(!_Bodies.ContainsKey(body.TrackingId) && istrackedone) 
                 {
                     //if body isn't tracked, create body
                     _Bodies[body.TrackingId] = CreateBodyObject(body.TrackingId);
-                    
+                    bodytrackingIDfornow = body.TrackingId;
+                    istrackedone = false;
                 }
+                
                 //update positions
-                RefreshBodyObject(body, _Bodies[body.TrackingId]);
+                RefreshBodyObject(body, _Bodies[bodytrackingIDfornow]);
                 //check post
                 checkifhaveanyAction();
+
             }
 
         
