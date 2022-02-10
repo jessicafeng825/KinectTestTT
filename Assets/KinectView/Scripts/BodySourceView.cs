@@ -11,10 +11,10 @@ public class BodySourceView : MonoBehaviour
     public GameObject mJointObject;
     public GameObject AnimatedHands;
 
-
+    public int count = 1;
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     private BodySourceManager _BodyManager;
-
+    private bool istrackedone = true;
     Transform LeftHand, RightHand, LeftShoulder, RightShoulder, ElbowLeft, ElbowRight, SpineMid;
     
     private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
@@ -94,6 +94,7 @@ public class BodySourceView : MonoBehaviour
             if(body.IsTracked)
             {
                 trackedIds.Add (body.TrackingId);
+                
             }
         }
         // First delete untracked bodies
@@ -106,12 +107,16 @@ public class BodySourceView : MonoBehaviour
             {
                 Destroy(_Bodies[trackingId]);
                 _Bodies.Remove(trackingId);
+                count++;
+                
             }
         }
 
         // create Kinect Bodies
+        /*
         foreach(var body in data)
         {
+            
             //if no body ,skip
             if (body == null)
             {
@@ -124,15 +129,33 @@ public class BodySourceView : MonoBehaviour
                 {
                     //if body isn't tracked, create body
                     _Bodies[body.TrackingId] = CreateBodyObject(body.TrackingId);
+                    
                 }
                 //update positions
                 RefreshBodyObject(body, _Bodies[body.TrackingId]);
                 //check post
                 checkifhaveanyAction();
             }
+            
         }
+*/
+        foreach (var body in data)
+        {
+            if (body.IsTracked)
+            {
+                if (!_Bodies.ContainsKey(data[0].TrackingId))
+                {
+                    //create the first tracking
+                    _Bodies[data[0].TrackingId] = CreateBodyObject(data[0].TrackingId);
+                }
+                //update positions
+                RefreshBodyObject(data[0], _Bodies[data[0].TrackingId]);
+                //check post
+                checkifhaveanyAction();
 
-        
+            }
+
+        }
     }
     
     private GameObject CreateBodyObject(ulong id)
