@@ -117,19 +117,11 @@ public class BodySourceView : MonoBehaviour
         }
 
         // create Kinect Bodies
-<<<<<<< HEAD
+
               
         foreach(var body in data)
         {
 
-                    //if no body ,skip
-=======
-        /*
-        foreach(var body in data)
-        {
-            
-            //if no body ,skip
->>>>>>> 07ad649f752559c19ae701ef629737b98f698c30
             if (body == null)
             {
               continue;
@@ -147,32 +139,11 @@ public class BodySourceView : MonoBehaviour
                 //check post
                 checkifhaveanyAction();
             }
-<<<<<<< HEAD
+
         
         }
-       
 
         /*
-        
-        if (body.IsTracked)
-        {
-            if (!_Bodies.ContainsKey(body.TrackingId))
-            {
-                //create the first tracking
-                _Bodies[body.TrackingId] = CreateBodyObject(body.TrackingId);
-            }
-            //update positions
-            RefreshBodyObject(body, _Bodies[body.TrackingId]);
-            //check post
-            checkifhaveanyAction();
-
-        }
-*/
-
-=======
-            
-        }
-*/
         foreach (var body in data)
         {
             if (body.IsTracked)
@@ -190,7 +161,7 @@ public class BodySourceView : MonoBehaviour
             }
 
         }
->>>>>>> 07ad649f752559c19ae701ef629737b98f698c30
+*/
     }
 
     private GameObject CreateBodyObject(ulong id)
@@ -279,6 +250,7 @@ public class BodySourceView : MonoBehaviour
             }
         }
     }
+    //
 
     private void checkifhaveanyAction()
     {
