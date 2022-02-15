@@ -176,6 +176,8 @@ MonoBehaviour:
   BodySourceManager: {fileID: 1698423884}
   mJointObject: {fileID: 4668605239653650838, guid: 06a9f6e4a04fdd443b7cab97c834c7eb, type: 3}
   AnimatedHands: {fileID: 1823516057}
+  istrackedone: 1
+  bodytrackingIDfornow: 0
 --- !u!1 &252019523
 GameObject:
   m_ObjectHideFlags: 0
